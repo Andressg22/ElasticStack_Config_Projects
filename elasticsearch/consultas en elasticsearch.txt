@@ -1,0 +1,732 @@
+GET _cat/indices
+
+GET _nodes
+
+GET _cat/indices?v
+
+GET _nodes/jf8XAxfORaCxBHXq-pZqxg
+
+POST /_cluster/allocation/explain
+{
+  "index": "loggenerator-2024.10.04",
+  "shard": 0,
+  "primary": false
+}
+
+GET _cat/nodes?v
+
+GET _cat/shards?v
+
+GET _cat/health?v
+
+PUT /new-index
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 2,
+      "number_of_replicas": 1
+    }
+  }
+}
+
+DELETE new-index
+
+PUT employees/_doc/2
+{
+    "name": "Andres",
+    "surrname": "sg",
+    "job": "ingeniero"
+}
+
+GET /employees/_doc/1?pretty=true
+
+
+POST /employees/_doc
+{
+    "name": "Andres",
+    "surname": "sg",
+    "job": "ingeniero"
+}
+
+
+GET employees/_search
+{
+    "query":{
+      "match_all":{
+    }
+}
+}
+
+GET log-generator-*/_search
+{
+    "query":{"match":{
+        "type":"JAVA_ERROR"
+    }}
+}
+
+GET /employees/_search
+{
+  "query": {
+    "match_all": {
+    }
+  }
+}
+
+
+PUT _index_template/loggenerator_template
+{
+  "index_patterns": ["loggenerator*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1
+    },
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "log_level": {
+          "type": "keyword"
+        },
+        "message": {
+          "type": "text"
+        },
+        "status_code": {
+          "type": "integer"
+        },
+        "user": {
+          "type": "keyword"
+        },
+        "client_ip": {
+          "type": "ip"
+        }
+      }
+    }
+  }
+}
+
+PUT _index_template/metricbeat-sura
+{
+  "index_patterns": ["metricbeat-sura-so*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1
+    },
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "log_level": {
+          "type": "keyword"
+        },
+        "message": {
+          "type": "text"
+        },
+        "status_code": {
+          "type": "float" 
+        },
+        "user": {
+          "type": "keyword"
+        },
+        "client_ip": {
+          "type": "ip"
+        }
+      }
+    }
+  }
+}
+
+
+GET _index_template/loggenerator_template
+
+
+
+
+
+PUT _index_template/metricbeat_long_template
+{
+  "index_patterns": ["metricbeat-*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1
+    },
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "system.filesystem.used.pct": {
+          "type": "long"
+        }
+      }
+    }
+  }
+}
+
+
+
+PUT _index_template/metricbeat-sura
+{
+  "index_patterns": ["metricbeat-sura-so*"],
+  "priority": 100,
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1
+    },
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "system.filesystem.used.pct": {
+          "type": "float"
+        }
+      }
+    }
+  }
+}
+
+
+PUT _index_template/metricbeat_long_template
+{
+  "index_patterns": ["metricbeat-long-*"],
+  "priority": 1,
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1
+    },
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}
+
+
+GET metricbeat-7.14.0-2024.10.10-000003/_mapping
+
+GET metricbeat-7.14.0-2024.10.10-000003/_search
+{
+  "_source": ["system.filesystem.used.pct"],
+  "size": 10,
+  "query": {
+    "exists": {
+      "field": "system.filesystem.used.pct"
+    }
+  }
+}
+
+GET metricbeat-7.14.0-2024.10.10-000003/_search
+{
+  "_source": ["system.filesystem.used.pct"],
+  "size": 10,
+  "query": {
+    "exists": {
+      "field": "system.filesystem.used.pct"
+    }
+  }
+}
+
+DELETE metricbeat-7.14.0-2024.10.07-000001
+
+GET _cat/indices
+
+DELETE metricbeat-7.14.0-2024.10.10-000003
+
+PUT _index_template/metricbeat_long_template
+{
+  "index_patterns": ["metricbeat-*"],
+  "priority": 1, 
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 1
+    },
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        },
+        "system.filesystem.used.pct": {
+          "type": "float"
+        }
+      }
+    }
+  }
+}
+
+GET _cat/indices?v
+
+
+
+
+
+
+POST _reindex
+{
+  "source": {
+    "index": "metricbeat-7.14.0-2024.10.10-000003" 
+  },
+  "dest": {
+    "index": "metricbeat-7.14.0-2024.10.10-000004"  
+  }
+}
+
+POST _reindex
+{
+  "source": {
+    "index": "metricbeat-sura-so-type-prod-1-2024.42"
+  },
+  "dest": {
+    "index": "metricbeat-sura-so-type-prod-1-2024.42-1"
+  }
+}
+
+GET /metricbeat-7.14.0-2024.10.10-000004/_settings
+
+GET _template/metricbeat*
+
+PUT /loggenerator-2024.10.07/_settings
+{
+  "index": {
+    "number_of_replicas": 0
+  }
+}
+
+GET /_cluster/health
+
+PUT /actividad3
+{
+  "mappings": {
+    "properties": {
+      "location": {
+        "type": "geo_point"
+      }
+    }
+  }
+}
+
+GET /actividad3-*/_mapping
+
+PUT actividad3-/_settings
+{
+  "index" : {
+    "number_of_replicas" : 0
+  }
+}
+
+GET actividad3-*/_mapping
+
+PUT actividad3_geo
+{
+  "mappings": {
+    "properties": {
+      "location": {
+        "type": "geo_point"
+      }
+    }
+  }
+}
+
+POST _reindex
+{
+  "source": {
+    "index": "actividad3-*"
+  },
+  "dest": {
+    "index": "actividad3_geo"
+  },
+  "script": {
+    "source": "ctx._source['location'] = ['lat': ctx._source['Latitud'], 'lon': ctx._source['Longitud']]"
+  }
+}
+
+GET actividad3_geo/_mapping
+
+GET /actividad3-*/_mapping
+
+GET act3*/_mapping
+
+GET _cat/indices
+
+GET /eje3-/_mapping
+
+GET eje3-/_search?size=10
+
+PUT ejemplo3_v2
+{
+  "mappings": {
+    "properties": {
+      "Latitud": { 
+        "type": "float" 
+      },
+      "Longitud": { 
+        "type": "float" 
+      },
+      "location": { 
+        "type": "geo_point" 
+      },
+      "Fecha": { 
+        "type": "date" 
+      },
+      "Km": { 
+        "type": "long" 
+      },
+      "Motor": { 
+        "type": "text", 
+        "fields": { 
+          "keyword": 
+          { "type": "keyword", "ignore_above": 256 
+            }
+          }
+        },
+      "Direccion": { 
+        "type": "text", 
+        "fields": { 
+          "keyword": { 
+            "type": "keyword", "ignore_above": 256 
+          } 
+        } 
+      }
+    }
+  }
+}
+
+POST _reindex
+{
+  "source": {
+    "index": "ejemplo3"
+  },
+  "dest": {
+    "index": "ejemplo3_v2"
+  }
+}
+
+GET _cat/indices?v
+
+DELETE ejemplo3
+
+GET _cat/indices/ejemplo3*
+
+GET ejemplo3*/_mapping
+
+GET prueba4*/_mapping
+
+PUT _template/prueba4_template
+{
+  "index_patterns": ["prueba4*"],
+  "mappings": {
+    "properties": {
+      "id.time": {
+        "type": "date",
+        "format": "strict_date_optional_time||epoch_millis"
+      },
+      "is_second_factor": {
+        "type": "boolean"
+      },
+      "is_suspicious": {
+        "type": "boolean"
+      },
+      "Latitud": { 
+        "type": "float" 
+      },
+      "Longitud": { 
+        "type": "float" 
+      },
+      "location": { 
+        "type": "geo_point" 
+      },
+      "Fecha": { 
+        "type": "date"
+      },
+      "Km": { 
+        "type": "long" 
+      },
+      "Motor": { 
+        "type": "text", 
+        "fields": { 
+          "keyword": 
+          { "type": "keyword", "ignore_above": 256 
+            }
+          }
+        },
+      "Direccion": { 
+        "type": "text", 
+        "fields": { 
+          "keyword": { 
+            "type": "keyword", "ignore_above": 256 
+          } 
+        } 
+    }
+  }
+}
+}
+
+GET prueba4*/_mapping
+
+GET _template/prueba4*
+
+PUT _template/prueba4-template
+{
+  "index_patterns": ["prueba4*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 1
+    },
+  "mappings": {
+    "properties": {
+      "id.time": {
+        "type": "date",
+        "format": "strict_date_optional_time||epoch_millis"
+      },
+      "is_second_factor": {
+        "type": "boolean"
+      },
+      "is_suspicious": {
+        "type": "boolean"
+        }
+      }
+    }
+  }
+}
+  
+  
+GET prueba4*/_mapping/field/id.time
+
+GET prueba4*/_search
+{
+  "_source": ["id.time"],
+  "size": 5,
+  "query": {
+    "exists": {
+      "field": "id.time"
+    }
+  }
+}
+
+GET prueba4*/_search
+{
+  "size": 0,
+  "query": {
+    "range": {
+      "id.time": {
+        "gte": "2020-04-30",
+        "lte": "2020-05-31",
+        "format": "yyyy-MM-dd"
+      }
+    }
+  },
+  "aggs": {
+    "by_email": {
+      "terms": {
+        "field": "actor.email.keyword",
+        "size": 100
+      },
+      "aggs": {
+        "by_name": {
+          "terms": {
+            "field": "name.keyword",
+            "size": 100
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+GET prueba4*/_search
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "is_suspicious": true
+          }
+        },
+        {
+          "range": {
+            "id.time": {
+              "gte": "2020-05-01",
+              "lte": "2020-05-31",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+GET ejemplo3_v2/_search
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "range": {
+            "Fecha": {
+              "gte": "2019-12-01T00:00:00",
+              "lte": "2019-12-01T03:00:00",
+              "format": "yyyy-MM-dd'T'HH:mm:ss"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "average_speed": {
+      "avg": {
+        "field": "Velocidad"
+      }
+    }
+  }
+}
+
+GET ejemplo3_v2/_search
+{
+  "query": {
+    "range": {
+      "Fecha": {
+        "gte": "2019-12-01T00:00:00",
+        "lte": "2019-12-01T03:00:00"
+      }
+    }
+  }
+}
+
+GET ejemplo3_v2/_search
+{
+  "query": {
+    "range": {
+      "Fecha": {
+        "gte": "2019-12-01T00:00:00",
+        "lte": "2019-12-01T23:59:59"
+      }
+    }
+  }
+}
+
+GET ejemplo3*/_search
+{
+  "size": 5
+}
+
+POST ejemplo3_v2/_update/os-0nZIBGpfSMYuTkaRw
+{
+  "doc": {
+    "Motor": "on"
+  }
+}
+
+GET ejemplo3_v2/_doc/os-0nZIBGpfSMYuTkaRw
+
+GET _template/ejemplo3_v2*
+
+POST _reindex
+{
+  "source": {
+    "index": "ejemplo3_v2"
+  },
+  "dest": {
+    "index": "ejemplo3_v2_reindex"
+  }
+}
+
+POST /_security/user/usuario1
+{
+"password" : "password123",
+"roles" : [ "read" ],
+"full_name" : "Usuario 1",
+"email" : "usuario1@example.com"
+}
+
+POST /_security/user/usuario2
+{
+"password" : "password123",
+"roles" : [ "admin" ],
+"full_name" : "Usuario 2",
+"email" : "usuario2@example.com"
+}
+
+#crear indice de referencia
+PUT /usuarios_grupo
+{
+"mappings": {
+"properties": {
+"actor.email": { "type": "keyword" },
+"enrich.grupoUsuario": { "type": "integer" }
+}
+}
+}
+
+#Agregar datos
+POST /grupousuarios/_bulk
+{ "index": { "_id": "1" } }
+{ "actor.email": "user1@example.com", "grupo": 1 }
+{ "index": { "_id": "2" } }
+{ "actor.email": "user2@example.com", "grupo": 2 }
+{ "index": { "_id": "3" } }
+{ "actor.email": "user3@example.com", "grupo": 1 }
+
+#Politicas
+PUT /_enrich/policy/grupousuario_policy
+{
+  "match": {
+    "indices": "grupousuarios",
+    "match_field": "actor.email",
+    "enrich_fields": ["grupo"]
+  }
+}
+
+#Ejecutar
+POST /_enrich/policy/grupousuario_policy/_execute
+
+#Crear un pipepline
+PUT /_ingest/pipeline/enrich_grupou_pipeline
+{
+  "processors": [
+    {
+      "enrich": {
+        "policy_name": "grupousuario_policy",
+        "field": "actor.email",
+        "target_field": "enrich.grupoUsuario",
+        "max_matches": "1",
+        "override": true
+      }
+    }
+  ]
+}
+
+GET /_cat/indices/ejercicio4*?v
+
+
+#aplicar pipeline
+POST /ejercicio4-2020.06.09/_doc/1?pipeline=enrich_grupou_pipeline
+{
+  "actor": {
+    "email": "user1@example.com"
+  },
+  "other_field": "1"
+}
+
+
+#verificar enrquecimiento
+
+GET /ejercicio4-2020.06.09/_doc/1
+
+GET /ejercicio4-2020.06.09/_mapping
